@@ -7,11 +7,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DisplayName("Репозиторий на основе JPA для работы с комментариями ")
 @DataJpaTest
@@ -42,5 +45,25 @@ class CommentRepositoryTest {
         expectedComments.add(em.find(Comment.class, 2));
         var actualComments = commentRepository.findAllByBookId(1);
         assertThat(actualComments).containsExactlyElementsOf(expectedComments);
+    }
+
+    @DisplayName("должен сохранять новый комментарий")
+    @Test
+    void shouldSaveNewComment() {
+        Book book = em.find(Book.class, 1);
+        var expectedComment = new Comment(0, book, "New comment");
+        var returnedComment = commentRepository.save(expectedComment);
+
+        var actualComment = em.find(Comment.class, returnedComment.getId());
+
+        assertEquals(expectedComment, actualComment);
+    }
+
+    @DisplayName("должен удалять комментарий по id ")
+    @Test
+    void shouldDeleteComment() {
+        assertThat(commentRepository.findById(1L)).isPresent();
+        commentRepository.deleteById(1L);
+        assertNull(em.find(Comment.class, 1L));
     }
 }
