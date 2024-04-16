@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.GenreRepository;
 
@@ -20,6 +21,7 @@ public class GenreServiceImpl implements GenreService {
         return genreRepository.findAll();
     }
 
+    @Transactional
     @Override
     public Genre save(String genreName) {
         long id = sequenceGeneratorService.generateSequence(Genre.SEQUENCE_NAME);

@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import ru.otus.hw.models.Genre;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataMongoTest
 @DisplayName("Репозиторий на основе MongoRepository для работы с жанрами")
