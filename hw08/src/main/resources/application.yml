@@ -1,0 +1,7 @@
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      database: test
+      host: localhost
+#      uri: mongodb://sys:sys-dev@10.97.141.31:27117/?replicaSet=rs01&connectTimeoutMS=300000&minPoolSize=10&maxPoolSize=100&maxIdleTimeMS=900000&readPreference=secondaryPreferred
