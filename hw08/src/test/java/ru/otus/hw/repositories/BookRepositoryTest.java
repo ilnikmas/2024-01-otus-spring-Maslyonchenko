@@ -38,18 +38,18 @@ class BookRepositoryTest {
     void setUp() {
         dbAuthors = getDbAuthors();
         dbGenres = getDbGenres();
-        mongoTemplate.save(new Book(1L, "BookTitle_1",
+        mongoTemplate.save(new Book("1", "BookTitle_1",
                 dbAuthors.get(0), dbGenres.get(0)));
-        mongoTemplate.save(new Book(2L, "BookTitle_2",
+        mongoTemplate.save(new Book("2", "BookTitle_2",
                 dbAuthors.get(1), dbGenres.get(1)));
-        mongoTemplate.save(new Book(3L, "BookTitle_3",
+        mongoTemplate.save(new Book("3", "BookTitle_3",
                 dbAuthors.get(2), dbGenres.get(2)));
     }
 
     @DisplayName("должен загружать книгу по id")
     @ParameterizedTest
-    @ValueSource(longs = {1, 2, 3})
-    void shouldReturnCorrectBookById(long bookId) {
+    @ValueSource(strings = {"1", "2", "3"})
+    void shouldReturnCorrectBookById(String bookId) {
         var actualBook = bookRepository.findById(bookId);
         var expectedBook = mongoTemplate.findById(bookId, Book.class);
         assertThat(actualBook).isPresent()
@@ -71,10 +71,10 @@ class BookRepositoryTest {
     @DisplayName("должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
-        var expectedBook = new Book(1, "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0));
+        var expectedBook = new Book("1", "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0));
         var returnedBook = bookRepository.save(expectedBook);
         assertThat(returnedBook).isNotNull()
-                .matches(book -> book.getId() > 0)
+                .matches(book -> book.getId() != null)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
 
         var actualBook = mongoTemplate.findById(returnedBook.getId(), Book.class);
@@ -85,12 +85,12 @@ class BookRepositoryTest {
     @DisplayName("должен сохранять измененную книгу")
     @Test
     void shouldSaveUpdatedBook() {
-        assertNotNull(mongoTemplate.findById(1L, Book.class));
-        var expectedBook = new Book(1L, "BookTitle_10500", dbAuthors.get(2), dbGenres.get(2));
+        assertNotNull(mongoTemplate.findById("1", Book.class));
+        var expectedBook = new Book("1", "BookTitle_10500", dbAuthors.get(2), dbGenres.get(2));
 
         var returnedBook = bookRepository.save(expectedBook);
         assertThat(returnedBook).isNotNull()
-                .matches(book -> book.getId() > 0)
+                .matches(book -> book.getId() != null)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
 
         var actualBook = mongoTemplate.findById(returnedBook.getId(), Book.class);
@@ -101,20 +101,20 @@ class BookRepositoryTest {
     @DisplayName("должен удалять книгу по id ")
     @Test
     void shouldDeleteBook() {
-        assertNotNull(mongoTemplate.findById(1L, Book.class));
-        bookRepository.deleteById(1L);
-        assertNull(mongoTemplate.findById(1L, Book.class));
+        assertNotNull(mongoTemplate.findById("1", Book.class));
+        bookRepository.deleteById("1");
+        assertNull(mongoTemplate.findById("1", Book.class));
     }
 
     private static List<Author> getDbAuthors() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Author(id, "Author_" + id))
+                .map(id -> new Author(id.toString(), "Author_" + id))
                 .toList();
     }
 
     private static List<Genre> getDbGenres() {
         return IntStream.range(1, 4).boxed()
-                .map(id -> new Genre(id, "Genre_" + id))
+                .map(id -> new Genre(id.toString(), "Genre_" + id))
                 .toList();
     }
 }

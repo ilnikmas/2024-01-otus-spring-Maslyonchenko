@@ -7,5 +7,5 @@ import java.util.List;
 public interface AuthorService {
     List<Author> findAll();
 
-    Author save(String name);
+    Author insert(String name);
 }

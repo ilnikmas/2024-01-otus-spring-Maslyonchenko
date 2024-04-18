@@ -25,7 +25,7 @@ public class AuthorCommands {
 
     @ShellMethod(value = "Add new author", key = "ana")
     public String addNewAuthor(String name) {
-        var savedAuthor = authorService.save(name);
+        var savedAuthor = authorService.insert(name);
         return authorConverter.authorToString(savedAuthor);
     }
 }

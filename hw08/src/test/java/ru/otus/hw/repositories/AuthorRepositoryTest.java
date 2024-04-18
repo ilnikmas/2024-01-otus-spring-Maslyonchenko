@@ -25,15 +25,15 @@ class AuthorRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        mongoTemplate.save(new Author(1L, "Author_1"));
-        mongoTemplate.save(new Author(2L, "Author_2"));
-        mongoTemplate.save(new Author(3L, "Author_3"));
+        mongoTemplate.save(new Author("1", "Author_1"));
+        mongoTemplate.save(new Author("2", "Author_2"));
+        mongoTemplate.save(new Author("3", "Author_3"));
     }
 
     @DisplayName("должен возвращать авторов по id")
     @ParameterizedTest
-    @ValueSource(longs = {1, 2, 3})
-    void shouldReturnCorrectAuthorsById(long authorId) {
+    @ValueSource(strings = {"1", "2", "3"})
+    void shouldReturnCorrectAuthorsById(String authorId) {
         var actualAuthor = authorRepository.findById(authorId);
         var expectedAuthor = mongoTemplate.findById(authorId, Author.class);
         assertThat(actualAuthor).isPresent()

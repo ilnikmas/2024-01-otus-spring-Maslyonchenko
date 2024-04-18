@@ -25,7 +25,7 @@ public class GenreCommands {
 
     @ShellMethod(value = "Add new genre", key = "ang")
     public String addNewGenre(String name) {
-        var savedGenre = genreService.save(name);
+        var savedGenre = genreService.insert(name);
         return genreConverter.genreToString(savedGenre);
     }
 }

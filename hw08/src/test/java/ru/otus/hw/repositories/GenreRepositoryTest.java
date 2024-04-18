@@ -25,9 +25,9 @@ class GenreRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        mongoTemplate.save(new Genre(1L, "Genre_1"));
-        mongoTemplate.save(new Genre(2L, "Genre_2"));
-        mongoTemplate.save(new Genre(3L, "Genre_3"));
+        mongoTemplate.save(new Genre("1", "Genre_1"));
+        mongoTemplate.save(new Genre("2", "Genre_2"));
+        mongoTemplate.save(new Genre("3", "Genre_3"));
     }
 
     @DisplayName("должен загружать список всех жанров")
@@ -42,8 +42,8 @@ class GenreRepositoryTest {
 
     @DisplayName("должен возвращать жанры по id")
     @ParameterizedTest
-    @ValueSource(longs = {1, 2, 3})
-    void shouldReturnCorrectAuthorsById(long genreId) {
+    @ValueSource(strings = {"1", "2", "3"})
+    void shouldReturnCorrectAuthorsById(String genreId) {
         var actualGenre = genreRepository.findById(genreId);
         var expectedGenre = mongoTemplate.findById(genreId, Genre.class);
         assertThat(actualGenre).isPresent()
