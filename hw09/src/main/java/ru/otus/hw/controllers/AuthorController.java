@@ -21,7 +21,8 @@ public class AuthorController {
     }
 
     @GetMapping("/authorAdd")
-    public String showAddAuthorForm(Author author) {
+    public String showAddAuthorForm(Author author, Model model) {
+        model.addAttribute("author", author);
         return "author-add";
     }
 

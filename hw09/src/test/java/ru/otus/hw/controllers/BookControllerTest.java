@@ -81,7 +81,7 @@ class BookControllerTest {
     @DisplayName("Удаление книги по id")
     @Test
     void deleteBook() throws Exception {
-        mvc.perform(post("/bookDelete/{id}", BOOK_ID))
+        mvc.perform(get("/bookDelete/{id}", BOOK_ID))
                 .andExpect(redirectedUrl("/booksList"));
     }
 

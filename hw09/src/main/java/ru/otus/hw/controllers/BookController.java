@@ -48,7 +48,7 @@ public class BookController {
         return "redirect:/booksList";
     }
 
-    @PostMapping("/bookDelete/{id}")
+    @GetMapping("/bookDelete/{id}")
     public String deleteBook(@PathVariable("id") long id) {
         bookService.deleteById(id);
         return "redirect:/booksList";
@@ -56,6 +56,7 @@ public class BookController {
 
     @GetMapping("/bookAdd")
     public String showAddBookForm(Book book, Model model) {
+        model.addAttribute("book", book);
         model.addAttribute("authors", authorService.findAll());
         model.addAttribute("genres", genreService.findAll());
         return "book-add";

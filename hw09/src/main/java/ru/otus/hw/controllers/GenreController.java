@@ -21,7 +21,8 @@ public class GenreController {
     }
 
     @GetMapping("/genreAdd")
-    public String showAddGenreForm(Genre genre) {
+    public String showAddGenreForm(Genre genre, Model model) {
+        model.addAttribute("genre", genre);
         return "genre-add";
     }
 
