@@ -35,8 +35,7 @@
         <th>Author</th>
         <th>Genre</th>
         <th>Comments</th>
-        <th>Edit</th>
-        <th>Delete</th>
+        <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -46,8 +45,14 @@
         <td th:text="${book.author.fullName}">1</td>
         <td th:text="${book.genre.name}">1</td>
         <td><a th:href="@{/commentsList/{id}(id=${book.id})}">Show comments</a></td>
-        <td><a th:href="@{/bookEdit/{id}(id=${book.id})}">Edit</a></td>
-        <td><a th:href="@{/bookDelete/{id}(id=${book.id})}">Delete</a></td>
+        <td>
+            <form method="GET" th:action="@{/bookEdit/{id}(id=${book.id})}">
+                <button type="submit" name="submit" value="value" class="link-button">Edit</button>
+            </form>
+            <form method="POST" th:action="@{/bookDelete/{id}(id=${book.id})}">
+                <button type="submit" name="submit" value="value" class="link-button">Delete</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
