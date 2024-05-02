@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Add new author</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<form action="#"
+      th:action="@{/authorAdd}"
+      th:object="${author}"
+      method="post">
+    <h3>Add new author:</h3>
+
+    <div class="row">
+        <label for="fullName">FullName</label>
+        <input type="text" th:field="*{fullName}" id="fullName" placeholder="fullName">
+    </div>
+
+    <div class="row">
+        <input type="submit" value="Add Author">
+        <a href="authors-list.html" th:href="@{/authorsList}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+
+</form>
