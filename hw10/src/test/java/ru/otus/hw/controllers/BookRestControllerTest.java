@@ -1,14 +1,18 @@
 package ru.otus.hw.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
+import ru.otus.hw.rest.BookRestController;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -18,14 +22,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @DisplayName("Тестирование контроллера книг")
-@WebMvcTest(BookController.class)
-class BookControllerTest {
+@WebMvcTest(BookRestController.class)
+class BookRestControllerTest {
 
     private static final long BOOK_ID = 1L;
 
@@ -46,16 +47,10 @@ class BookControllerTest {
     void insertBook() throws Exception {
         Book book = getBook();
 
-        mvc.perform(post("/bookAdd").flashAttr("book", book))
-                .andExpect(redirectedUrl("/booksList"));
-    }
-
-    @DisplayName("Получение книги по идентификатору")
-    @Test
-    void getBookById() throws Exception {
-        Book book = getBook();
-        given(bookService.findById(1)).willReturn(Optional.of(book));
-        this.mvc.perform(get("/bookEdit/{id}", BOOK_ID))
+        mvc.perform(MockMvcRequestBuilders.post("/api/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(book)))
                 .andExpect(status().isOk());
     }
 
@@ -64,7 +59,7 @@ class BookControllerTest {
     void getAllBooks() throws Exception {
         List<Book> books = Collections.singletonList(getBook());
         given(bookService.findAll()).willReturn(books);
-        this.mvc.perform(get("/booksList"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/books"))
                 .andExpect(status().isOk());
     }
 
@@ -74,15 +69,18 @@ class BookControllerTest {
         Book book = getBook();
         given(bookService.findById(book.getId())).willReturn(Optional.of(book));
 
-        mvc.perform(post("/bookUpdate").flashAttr("book", book))
-                .andExpect(redirectedUrl("/booksList"));
+        mvc.perform(MockMvcRequestBuilders.put("/api/books")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(book)))
+                .andExpect(status().isOk());
     }
 
     @DisplayName("Удаление книги по id")
     @Test
     void deleteBook() throws Exception {
-        mvc.perform(post("/bookDelete/{id}", BOOK_ID))
-                .andExpect(redirectedUrl("/booksList"));
+        mvc.perform(MockMvcRequestBuilders.delete("/api/books/{id}", BOOK_ID))
+                .andExpect(status().isOk());
     }
 
     private Book getBook() {
@@ -92,5 +90,13 @@ class BookControllerTest {
         return new Book(BOOK_ID, "BookTitle_1",
                 authorService.findAll().get(0),
                 genreService.findAll().get(0));
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
