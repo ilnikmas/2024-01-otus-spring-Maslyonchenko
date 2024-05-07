@@ -23,7 +23,6 @@
     </style>
     <script>
         function saveBook() {
-            const savedBookContainer = document.getElementById("saved-book")
             const bookTitleInput = document.getElementById("book-title-input")
             const authorInput = document.getElementById("author-select")
             const author = {id: authorInput.value}
@@ -37,8 +36,6 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(book)})
-                .then(rawResponse => rawResponse.json())
-                .then(json => savedBookContainer.innerHTML = JSON.stringify(json, null, 4))
         }
     </script>
 
@@ -69,9 +66,7 @@
     </div>
 
     <div class="row">
-        <a href="books-list.html" th:href="@{/booksList}">
-            <button type="button" onclick="saveBook()">Save</button>
-        </a>
+        <button type="button" onclick="saveBook()">Save</button>
         <a href="books-list.html" th:href="@{/booksList}">
             <button type="button">Cancel</button>
         </a>

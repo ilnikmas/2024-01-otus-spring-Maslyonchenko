@@ -23,7 +23,6 @@
     </style>
     <script>
         function saveAuthor() {
-            const savedAuthorContainer = document.getElementById("saved-author")
             const nameInput = document.getElementById("author-name-input")
             const author = { fullName: nameInput.value}
             fetch("/api/authors", {
@@ -33,8 +32,6 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(author)})
-                .then(rawResponse => rawResponse.json())
-                .then(json => savedAuthorContainer.innerHTML = JSON.stringify(json, null, 4))
         }
     </script>
 </head>
@@ -49,9 +46,7 @@
     </div>
 
     <div class="row">
-        <a href="authors-list.html" th:href="@{/authorsList}">
-            <button type="button" onclick="saveAuthor()">Save</button>
-        </a>
+        <button type="button" onclick="saveAuthor()">Save</button>
         <a href="authors-list.html" th:href="@{/authorsList}">
             <button type="button">Cancel</button>
         </a>

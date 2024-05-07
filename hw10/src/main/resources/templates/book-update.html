@@ -23,7 +23,6 @@
     </style>
     <script>
         function updateBook() {
-            const updatedBookContainer = document.getElementById("updated-book")
             const bookIdInput = document.getElementById("book-id-input")
             const bookTitleInput = document.getElementById("book-title-input")
             const authorInput = document.getElementById("author-select")
@@ -38,8 +37,6 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(book)})
-                .then(rawResponse => rawResponse.json())
-                .then(json => updatedBookContainer.innerHTML = JSON.stringify(json, null, 4))
         }
     </script>
 </head>
@@ -74,9 +71,7 @@
     </div>
 
     <div class="row">
-        <a href="books-list.html" th:href="@{/booksList}">
-            <button type="button" onclick="updateBook()">Update Book</button>
-        </a>
+        <button type="button" onclick="updateBook()">Update Book</button>
         <a href="books-list.html" th:href="@{/booksList}">
             <button type="button">Cancel</button>
         </a>
