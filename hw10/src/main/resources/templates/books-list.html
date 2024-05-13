@@ -29,7 +29,7 @@
         function deleteBook(bookId) {
             fetch("/api/books/" + bookId, {
                 method: 'DELETE',
-            })
+            }).then(response => location.href = "/booksList")
         }
         $(function () {
             fetch('/api/books')
@@ -49,7 +49,7 @@
                             <form method="GET" action="/bookEdit/${book.id}">
                                 <button type="submit" name="submit" value="value" class="link-button">Edit</button>
                             </form>
-                            <button type="submit" onclick="deleteBook(${book.id})">Delete</button>
+                            <button type="button" onclick="deleteBook(${book.id})">Delete</button</button>
                         </td>
                     </tr>
                 `)
