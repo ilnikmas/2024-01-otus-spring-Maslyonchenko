@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function updateBook() {
+            const bookIdInput = document.getElementById("book-id-input")
+            const bookTitleInput = document.getElementById("book-title-input")
+            const authorInput = document.getElementById("author-select")
+            const author = {id: authorInput.value}
+            const genreInput = document.getElementById("genre-select")
+            const genre = {id: genreInput.value}
+            const book = {id: bookIdInput.value, title: bookTitleInput.value, author: author, genre: genre}
+            fetch("/api/books", {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(book)})
+                .then(response => location.href="/booksList")
+        }
+    </script>
+</head>
+<body>
+<form action="#" th:object="${book}">
+    <h3>Book Info:</h3>
+
+    <div class="row">
+        <label for="book-id-input">ID</label>
+        <input id="book-id-input" type="number" readonly="readonly" th:field="*{id}" placeholder="id">
+    </div>
+
+    <div class="row">
+        <label for="book-title-input">Title</label>
+        <input id="book-title-input" type="text" th:field="*{title}" placeholder="title">
+    </div>
+
+    <div class="row">
+        <label for="author-select">Author:</label>
+        <select id="author-select" th:field="*{author}">
+            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fullName}"
+                    th:selected="*{author}"/>
+        </select>
+    </div>
+
+    <div class="row">
+        <label for="genre-select">Genre:</label>
+        <select id="genre-select" th:field="*{genre}">
+            <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}"
+                    th:selected="*{genre}"/>
+        </select>
+    </div>
+
+    <div class="row">
+        <button type="button" onclick="updateBook()">Update Book</button>
+        <a href="books-list.html" th:href="@{/booksList}">
+            <button type="button">Cancel</button>
+        </a>
+    </div>
+
+</form>
+</body>
+</html>
